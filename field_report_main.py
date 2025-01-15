@@ -5,7 +5,7 @@ from gemini_helper import GeminiInspector
 
 # Page configuration
 st.set_page_config(
-    page_title="Construction Invoice Analyzer",
+    page_title="Construction Invoice/Estimate Analyzer",
     page_icon="📊",
     layout="wide"
 )
@@ -37,28 +37,28 @@ with st.sidebar:
         st.rerun()
 
 # Main title
-st.title("📊 Construction Invoice Cost Coding Assistant")
-st.markdown("Upload an invoice image to automatically assign cost codes and analyze expenses.")
+st.title("📊 Construction Invoice/Estimate Cost Coding Assistant")
+st.markdown("Upload an invoice/estimate image to automatically assign cost codes and analyze expenses.")
 
 # Initialize chat if not already done
 if st.session_state.chat is None:
     st.session_state.chat = inspector.start_chat()
 
 # File uploader
-uploaded_file = st.file_uploader("Upload an invoice image", type=['png', 'jpg', 'jpeg'])
+uploaded_file = st.file_uploader("Upload an invoice/estimate image", type=['png', 'jpg', 'jpeg'])
 
 # Main interface
 if uploaded_file:
     # Display image
     image = Image.open(uploaded_file)
-    st.image(image, caption="Invoice Image", use_container_width=True)
+    st.image(image, caption="Invoice/Estimate Image", use_container_width=True)
     
     # Analyze button
     if not st.session_state.image_analyzed:
         col1, col2 = st.columns([1, 2])
         with col1:
-            if st.button("Analyze Invoice", type="primary"):
-                with st.spinner("Analyzing invoice and assigning cost codes..."):
+            if st.button("Analyze Invoice/Estimate", type="primary"):
+                with st.spinner("Analyzing invoice/estimate and assigning cost codes..."):
                     # Store image for reference
                     st.session_state.current_image = image
                     
@@ -71,14 +71,14 @@ if uploaded_file:
                     st.rerun()
 
 # Display chat history
-st.markdown("### 💬 Invoice Analysis Chat")
+st.markdown("### 💬 Invoice/Estimate Analysis Chat")
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
 # Chat input
 if st.session_state.image_analyzed:
-    if prompt := st.chat_input("Ask questions about the invoice analysis..."):
+    if prompt := st.chat_input("Ask questions about the invoice/estimate analysis..."):
         # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
@@ -94,9 +94,9 @@ if st.session_state.image_analyzed:
 # Footer with instructions
 st.markdown("---")
 st.markdown("""
-### How to Use This Invoice Analyzer
-1. Upload a clear image of your construction invoice
-2. Click "Analyze Invoice" to get an automated cost code analysis
+### How to Use This Invoice/Estimate Analyzer
+1. Upload a clear image of your construction invoice/estimate
+2. Click "Analyze Invoice/Estimate" to get an automated cost code analysis
 3. Review the generated cost codes and classifications
 4. Ask questions about specific line items or classifications
 5. Use the "Clear Chat History" button in the sidebar to start fresh
