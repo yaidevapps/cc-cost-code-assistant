@@ -3,6 +3,12 @@ from PIL import Image
 import google.generativeai as genai
 from gemini_helper import GeminiInspector
 
+# PDF generation imports
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
+import io
+
 # Page configuration
 st.set_page_config(
     page_title="Construction Invoice/Estimate Analyzer",
@@ -109,12 +115,33 @@ Example questions you can ask:
 - Are there any alternative cost codes that could apply to this item?
 """)
 
-# Download button for chat history
+# Download button for PDF report
 if st.session_state.messages:
-    chat_history = "\n\n".join([f"{msg['role'].upper()}: {msg['content']}" for msg in st.session_state.messages])
+    # Create a PDF buffer
+    pdf_buffer = io.BytesIO()
+    
+    # Create PDF document
+    doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
+    styles = getSampleStyleSheet()
+    
+    # Prepare PDF content
+    story = []
+    story.append(Paragraph("Construction Invoice/Estimate Analysis Report", styles['Title']))
+    story.append(Paragraph(" ", styles['Normal']))  # Add spacing
+    
+    for msg in st.session_state.messages:
+        story.append(Paragraph(f"{msg['role'].upper()}: {msg['content']}", styles['Normal']))
+    
+    # Build PDF
+    doc.build(story)
+    
+    # Reset buffer position
+    pdf_buffer.seek(0)
+    
+    # Download button for PDF
     st.download_button(
         "Download Analysis Report",
-        chat_history,
-        file_name="invoice_analysis.txt",
-        mime="text/plain"
+        pdf_buffer,
+        file_name="invoice_analysis.pdf",
+        mime="application/pdf"
     )
