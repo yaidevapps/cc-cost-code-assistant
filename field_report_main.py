@@ -5,8 +5,10 @@ from gemini_helper import GeminiInspector
 
 # PDF generation imports
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.colors import black, blue
+from reportlab.lib.units import inch
 import io
 
 # Page configuration
@@ -120,17 +122,38 @@ if st.session_state.messages:
     # Create a PDF buffer
     pdf_buffer = io.BytesIO()
     
-    # Create PDF document
-    doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
+    # Create custom styles
     styles = getSampleStyleSheet()
+    user_style = ParagraphStyle(
+        'UserStyle', 
+        parent=styles['Normal'], 
+        textColor=blue, 
+        fontName='Helvetica-Bold'
+    )
+    assistant_style = ParagraphStyle(
+        'AssistantStyle', 
+        parent=styles['Normal'], 
+        textColor=black, 
+        fontName='Helvetica'
+    )
+    
+    # Create PDF document
+    doc = SimpleDocTemplate(pdf_buffer, pagesize=letter, rightMargin=72, leftMargin=72, topMargin=72, bottomMargin=18)
+    story = []
+    
+    # Add title
+    story.append(Paragraph("Construction Invoice/Estimate Analysis Report", styles['Title']))
+    story.append(Spacer(1, 12))
     
     # Prepare PDF content
-    story = []
-    story.append(Paragraph("Construction Invoice/Estimate Analysis Report", styles['Title']))
-    story.append(Paragraph(" ", styles['Normal']))  # Add spacing
-    
     for msg in st.session_state.messages:
-        story.append(Paragraph(f"{msg['role'].upper()}: {msg['content']}", styles['Normal']))
+        # Choose style based on role
+        style = user_style if msg['role'] == 'user' else assistant_style
+        
+        # Add role prefix and message
+        story.append(Paragraph(f"{msg['role'].upper()}:", style))
+        story.append(Paragraph(msg['content'], style))
+        story.append(Spacer(1, 6))
     
     # Build PDF
     doc.build(story)
