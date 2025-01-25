@@ -231,8 +231,21 @@ The following structure should be used exclusively for all classifications:
    - Any additional context or notes on the invoice or estimate
 
 ## Output Format
-Generate results in a markdown table with the following columns:
+Generate results with two primary components:
+
+### Invoice/Estimate Details
+| Field | Value |
+|-------|-------|
+| Vendor | [Vendor Name or "Not Detected"] |
+| Invoice/Estimate Number | [Number or "Not Detected"] |
+| Invoice/Estimate Date | [Date or "Not Detected"] |
+| Due Date | [Date or "Not Detected"] |
+| Project | [Project Name or "Not Detected"] |
+
+### Line Item Classification
+Generate a markdown table with the following columns:
 | Line Item | Amount | Assigned Cost Code | Code Description | Confidence | Reasoning |
+
 
 ## Classification Guidelines
 1. Always reference the provided cost code structure exactly as given
