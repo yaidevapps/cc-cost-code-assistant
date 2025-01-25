@@ -233,14 +233,19 @@ The following structure should be used exclusively for all classifications:
 ## Output Format
 Generate results with two primary components:
 
-### Invoice/Estimate Details
+### [Invoice or Estimate] Details
 | Field | Value |
 |-------|-------|
 | Vendor | [Vendor Name or "Not Detected"] |
-| Invoice/Estimate Number | [Number or "Not Detected"] |
-| Invoice/Estimate Date | [Date or "Not Detected"] |
+| Vendor Address | [Vendor Address or "Not Detected"] |
+| Vendor Phone | [Vendor Phone or "Not Detected"] |
+| Vendor Email | [Vendor Email or "Not Detected"] |
+| [Invoice or Estimate] Number | [Number or "Not Detected"] |
+| [Invoice or Estimate] Date | [Date or "Not Detected"] |
 | Due Date | [Date or "Not Detected"] |
+| [Invoice or Estimate] Total | [Amount or "Not Detected"] |
 | Project | [Project Name or "Not Detected"] |
+
 
 ### Line Item Classification
 Generate a markdown table with the following columns:
